@@ -9,6 +9,8 @@ class TipsScreen extends StatelessWidget {
     'Take screen breaks every hour 👀',
   ];
 
+  TipsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

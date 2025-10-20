@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CheckInScreen extends StatefulWidget {
+  const CheckInScreen({super.key});
+
   @override
   _CheckInScreenState createState() => _CheckInScreenState();
 }
@@ -22,6 +24,16 @@ class _CheckInScreenState extends State<CheckInScreen> {
               'Neutral',
               'Stressed',
               'Sad',
+              'Angry',
+              'Nauseous',
+              'Joyful',
+              'Depressed',
+              'Anxious',
+              'Excited',
+              'Tired',
+              'surprised',
+              'fear',
+              'disgusted',
             ].map((m) => DropdownMenuItem(value: m, child: Text(m))).toList(),
             onChanged: (val) => setState(() => mood = val!),
           ),

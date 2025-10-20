@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TrackerScreen extends StatefulWidget {
+  const TrackerScreen({super.key});
+
   @override
   _TrackerScreenState createState() => _TrackerScreenState();
 }
