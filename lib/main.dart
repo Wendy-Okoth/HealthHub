@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,10 +18,12 @@ class HealthHubApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final session = Supabase.instance.client.auth.currentSession;
+
     return MaterialApp(
       title: 'HealthHub',
       theme: ThemeData(primarySwatch: Colors.teal),
-      home: HomeScreen(),
+      home: session == null ? const LoginScreen() : HomeScreen(),
     );
   }
 }
