@@ -5,6 +5,7 @@ import 'tips_screen.dart';
 import 'checkin_screen.dart';
 import 'map_view.dart';
 import 'login_screen.dart';
+import 'profile_setup_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final List<Map<String, dynamic>> features = [
@@ -25,12 +26,24 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  void _openProfile(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ProfileSetupScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('HealthHub'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            tooltip: 'Profile',
+            onPressed: () => _openProfile(context),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',

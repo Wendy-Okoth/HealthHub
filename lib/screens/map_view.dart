@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapView extends StatefulWidget {
-  const MapView({Key? key}) : super(key: key);
+  const MapView({super.key});
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -39,12 +39,16 @@ class _MapViewState extends State<MapView> {
 
     setState(() {
       _center = userLocation;
-      _markers.add(Marker(
-        markerId: MarkerId('you'),
-        position: userLocation,
-        infoWindow: InfoWindow(title: 'You are here'),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-      ));
+      _markers.add(
+        Marker(
+          markerId: MarkerId('you'),
+          position: userLocation,
+          infoWindow: InfoWindow(title: 'You are here'),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueAzure,
+          ),
+        ),
+      );
     });
 
     _mapController.animateCamera(CameraUpdate.newLatLng(userLocation));
