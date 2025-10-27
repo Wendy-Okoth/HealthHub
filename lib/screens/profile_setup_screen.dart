@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'home_screen.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -19,6 +18,35 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final _goalController = TextEditingController();
   bool _loading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return;
+
+    final data = await Supabase.instance.client
+        .from('profiles')
+        .select()
+        .eq('user_id', userId)
+        .maybeSingle();
+
+    if (data != null) {
+      _firstNameController.text = data['first_name'] ?? '';
+      _lastNameController.text = data['last_name'] ?? '';
+      _locationController.text = data['location'] ?? '';
+      _clinicController.text = data['preferred_clinic'] ?? '';
+      _goalController.text = data['wellness_goal'] ?? '';
+      if (data['birthday'] != null) {
+        _birthday = DateTime.tryParse(data['birthday']);
+      }
+      setState(() {});
+    }
+  }
+
   Future<void> _submitProfile() async {
     if (!_formKey.currentState!.validate() || _birthday == null) return;
     setState(() => _loading = true);
@@ -26,7 +54,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId == null) return;
 
-    final response = await Supabase.instance.client.from('profiles').upsert({
+    await Supabase.instance.client.from('profiles').upsert({
       'user_id': userId,
       'first_name': _firstNameController.text.trim(),
       'last_name': _lastNameController.text.trim(),
@@ -37,10 +65,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     });
 
     if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => HomeScreen()),
-    );
+    Navigator.pop(context); // Return to HomeScreen
   }
 
   @override
@@ -78,7 +103,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 onTap: () async {
                   final picked = await showDatePicker(
                     context: context,
-                    initialDate: DateTime(2000),
+                    initialDate: _birthday ?? DateTime(2000),
                     firstDate: DateTime(1900),
                     lastDate: DateTime.now(),
                   );
