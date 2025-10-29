@@ -84,7 +84,12 @@ class _HomeScreenState extends State<HomeScreen> {
             Card(
               margin: const EdgeInsets.all(16),
               child: ListTile(
-                leading: const Icon(Icons.account_circle, size: 40),
+                leading: profile!['profile_avatar'] != null
+                    ? CircleAvatar(
+                        backgroundImage: AssetImage(profile!['profile_avatar']),
+                        radius: 25,
+                      )
+                    : const Icon(Icons.account_circle, size: 40),
                 title: Text(
                   '${profile!['first_name'] ?? ''} ${profile!['last_name'] ?? ''}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
