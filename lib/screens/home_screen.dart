@@ -6,6 +6,7 @@ import 'checkin_screen.dart';
 import 'map_view.dart';
 import 'login_screen.dart';
 import 'profile_setup_screen.dart';
+import 'step_tracker_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     {'title': 'Wellness Tips', 'screen': TipsScreen()},
     {'title': 'Daily Check-in', 'screen': CheckInScreen()},
     {'title': 'Nearby Clinics', 'screen': MapView()},
+    {'title': 'Step Tracker', 'screen': StepTrackerScreen()},
   ];
 
   @override
