@@ -18,10 +18,24 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final _goalController = TextEditingController();
   bool _loading = false;
 
+  String? _selectedAvatar;
+  final List<String> _avatarPaths = List.generate(
+    36,
+    (index) => 'assets/image${index + 1}.png',
+  );
+
+  final ScrollController _avatarScrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     _loadProfile();
+  }
+
+  @override
+  void dispose() {
+    _avatarScrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadProfile() async {
@@ -40,6 +54,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       _locationController.text = data['location'] ?? '';
       _clinicController.text = data['preferred_clinic'] ?? '';
       _goalController.text = data['wellness_goal'] ?? '';
+      _selectedAvatar = data['profile_avatar'];
       if (data['birthday'] != null) {
         _birthday = DateTime.tryParse(data['birthday']);
       }
@@ -62,6 +77,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       'location': _locationController.text.trim(),
       'preferred_clinic': _clinicController.text.trim(),
       'wellness_goal': _goalController.text.trim(),
+      'profile_avatar': _selectedAvatar,
     });
 
     if (!mounted) return;
@@ -125,6 +141,48 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               TextFormField(
                 controller: _goalController,
                 decoration: const InputDecoration(labelText: 'Wellness Goal'),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Choose an Avatar',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 100,
+                width: double.infinity,
+                child: Scrollbar(
+                  controller: _avatarScrollController,
+                  thumbVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: _avatarScrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: _avatarPaths.map((path) {
+                        final isSelected = _selectedAvatar == path;
+                        return GestureDetector(
+                          onTap: () => setState(() => _selectedAvatar = path),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: isSelected
+                                    ? Colors.blue
+                                    : Colors.transparent,
+                                width: 2,
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage(path),
+                              radius: 30,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
