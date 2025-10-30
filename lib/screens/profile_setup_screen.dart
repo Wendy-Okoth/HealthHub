@@ -16,6 +16,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final _locationController = TextEditingController();
   final _clinicController = TextEditingController();
   final _goalController = TextEditingController();
+  String? _gender;
+  final List<String> _genderOptions = ['Male', 'Female'];
   bool _loading = false;
 
   String? _selectedAvatar;
@@ -55,6 +57,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       _clinicController.text = data['preferred_clinic'] ?? '';
       _goalController.text = data['wellness_goal'] ?? '';
       _selectedAvatar = data['profile_avatar'];
+      _gender = data['gender'];
       if (data['birthday'] != null) {
         _birthday = DateTime.tryParse(data['birthday']);
       }
@@ -78,10 +81,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       'preferred_clinic': _clinicController.text.trim(),
       'wellness_goal': _goalController.text.trim(),
       'profile_avatar': _selectedAvatar,
+      'gender': _gender,
     });
 
     if (!mounted) return;
-    Navigator.pop(context); // Return to HomeScreen
+    Navigator.pop(context);
   }
 
   @override
@@ -107,6 +111,16 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 validator: (value) => value == null || value.trim().isEmpty
                     ? 'Enter your last name'
                     : null,
+              ),
+              DropdownButtonFormField<String>(
+                value: _gender,
+                decoration: const InputDecoration(labelText: 'Gender'),
+                items: _genderOptions.map((gender) {
+                  return DropdownMenuItem(value: gender, child: Text(gender));
+                }).toList(),
+                onChanged: (value) => setState(() => _gender = value),
+                validator: (value) =>
+                    value == null ? 'Please select your gender' : null,
               ),
               const SizedBox(height: 12),
               ListTile(

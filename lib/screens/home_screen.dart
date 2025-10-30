@@ -7,6 +7,8 @@ import 'map_view.dart';
 import 'login_screen.dart';
 import 'profile_setup_screen.dart';
 import 'step_tracker_screen.dart';
+import 'period_tracker_screen.dart';
+import 'sleep_tracker_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,6 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
     {'title': 'Daily Check-in', 'screen': CheckInScreen()},
     {'title': 'Nearby Clinics', 'screen': MapView()},
     {'title': 'Step Tracker', 'screen': StepTrackerScreen()},
+    {'title': 'Sleep Tracker', 'screen': SleepTrackerScreen()},
+    {'title': 'Period Tracker', 'screen': PeriodTrackerScreen()},
   ];
 
   @override
@@ -96,8 +100,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   '${profile!['first_name'] ?? ''} ${profile!['last_name'] ?? ''}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text(
-                  'Goal: ${profile!['wellness_goal'] ?? 'Not set'}',
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Gender: ${profile!['gender'] ?? 'Not set'}'),
+                    Text('Goal: ${profile!['wellness_goal'] ?? 'Not set'}'),
+                  ],
                 ),
                 trailing: Text(
                   profile!['birthday'] != null
