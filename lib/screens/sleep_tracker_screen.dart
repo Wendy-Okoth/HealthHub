@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SleepTrackerScreen extends StatefulWidget {
   const SleepTrackerScreen({super.key});
@@ -10,9 +11,26 @@ class SleepTrackerScreen extends StatefulWidget {
 class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
   DateTime _selectedDate = DateTime.now();
   double _sleepHours = 0;
+  bool _loading = false;
 
-  void _submitSleepLog() {
-    // TODO: Save to Supabase or local storage
+  Future<void> _submitSleepLog() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return;
+
+    setState(() => _loading = true);
+
+    await Supabase.instance.client.from('sleep_logs').upsert({
+      'user_id': userId,
+      'date': _selectedDate.toIso8601String().split('T').first,
+      'hours': _sleepHours,
+    });
+
+    setState(() {
+      _sleepHours = 0;
+      _selectedDate = DateTime.now();
+      _loading = false;
+    });
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -20,10 +38,22 @@ class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
         ),
       ),
     );
-    setState(() {
-      _sleepHours = 0;
-      _selectedDate = DateTime.now();
-    });
+  }
+
+  Future<List<Map<String, dynamic>>> fetchWeeklySleep() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    final today = DateTime.now();
+    final weekAgo = today.subtract(const Duration(days: 6));
+
+    final response = await Supabase.instance.client
+        .from('sleep_logs')
+        .select()
+        .eq('user_id', userId!)
+        .gte('date', weekAgo.toIso8601String().split('T').first)
+        .lte('date', today.toIso8601String().split('T').first)
+        .order('date');
+
+    return List<Map<String, dynamic>>.from(response);
   }
 
   @override
@@ -56,8 +86,10 @@ class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _sleepHours > 0 ? _submitSleepLog : null,
-              child: const Text('Save Sleep Log'),
+              onPressed: _sleepHours > 0 && !_loading ? _submitSleepLog : null,
+              child: _loading
+                  ? const CircularProgressIndicator()
+                  : const Text('Save Sleep Log'),
             ),
           ],
         ),
