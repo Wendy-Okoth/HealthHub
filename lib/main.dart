@@ -22,8 +22,22 @@ class HealthHubApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'HealthHub',
-      theme: ThemeData(primarySwatch: Colors.teal),
-      home: session == null ? const LoginScreen() : HomeScreen(),
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.green),
+      ),
+      home: session == null ? const LoginScreen() : const HomeScreen(),
     );
   }
 }

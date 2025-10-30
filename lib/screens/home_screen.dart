@@ -21,13 +21,37 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic>? profile;
 
   final List<Map<String, dynamic>> features = [
-    {'title': 'Health Tracker', 'screen': TrackerScreen()},
-    {'title': 'Wellness Tips', 'screen': TipsScreen()},
-    {'title': 'Daily Check-in', 'screen': CheckInScreen()},
-    {'title': 'Nearby Clinics', 'screen': MapView()},
-    {'title': 'Step Tracker', 'screen': StepTrackerScreen()},
-    {'title': 'Sleep Tracker', 'screen': SleepTrackerScreen()},
-    {'title': 'Period Tracker', 'screen': PeriodTrackerScreen()},
+    {
+      'title': 'Health Tracker',
+      'icon': Icons.favorite,
+      'screen': TrackerScreen(),
+    },
+    {'title': 'Wellness Tips', 'icon': Icons.lightbulb, 'screen': TipsScreen()},
+    {
+      'title': 'Daily Check-in',
+      'icon': Icons.check_circle,
+      'screen': CheckInScreen(),
+    },
+    {
+      'title': 'Nearby Clinics',
+      'icon': Icons.local_hospital,
+      'screen': MapView(),
+    },
+    {
+      'title': 'Step Tracker',
+      'icon': Icons.directions_walk,
+      'screen': StepTrackerScreen(),
+    },
+    {
+      'title': 'Sleep Tracker',
+      'icon': Icons.bedtime,
+      'screen': SleepTrackerScreen(),
+    },
+    {
+      'title': 'Period Tracker',
+      'icon': Icons.calendar_today,
+      'screen': PeriodTrackerScreen(),
+    },
   ];
 
   @override
@@ -119,6 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: features.length,
               itemBuilder: (context, index) {
                 return ListTile(
+                  leading: Icon(features[index]['icon'], color: Colors.green),
                   title: Text(features[index]['title']),
                   trailing: const Icon(Icons.arrow_forward),
                   onTap: () => Navigator.push(
