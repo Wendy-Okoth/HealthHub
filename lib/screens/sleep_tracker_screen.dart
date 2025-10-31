@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../services/notifications.dart';
 
 class SleepTrackerScreen extends StatefulWidget {
   const SleepTrackerScreen({super.key});
@@ -90,6 +91,16 @@ class _SleepTrackerScreenState extends State<SleepTrackerScreen> {
               child: _loading
                   ? const CircularProgressIndicator()
                   : const Text('Save Sleep Log'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                await scheduleSleepReminder();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Sleep reminder set for 10 PM')),
+                );
+              },
+              child: const Text('Enable Sleep Reminder'),
             ),
           ],
         ),
