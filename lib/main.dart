@@ -26,15 +26,15 @@ class HealthHubApp extends StatelessWidget {
       title: 'HealthHub',
       theme: ThemeData(
         primarySwatch: Colors.teal,
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: Colors.cream,
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
+          foregroundColor: Colors.cream,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
+            foregroundColor: Colors.cream,
           ),
         ),
         iconTheme: const IconThemeData(color: Colors.green),
