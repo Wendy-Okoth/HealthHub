@@ -23,7 +23,7 @@ Future<void> scheduleSleepReminder() async {
   await flutterLocalNotificationsPlugin.zonedSchedule(
     0,
     'Time to wind down 💤',
-    'Log your sleep and get ready for rest',
+    'Log in your time and get ready to sleep',
     _next10PM(),
     const NotificationDetails(
       android: AndroidNotificationDetails('sleep_channel', 'Sleep Reminders'),
