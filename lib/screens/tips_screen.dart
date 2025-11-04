@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TipsScreen extends StatelessWidget {
   final List<String> tips = [
     'Drink 2L of water daily 💧',
-    'Get 7–8 hours of sleep 😴',
+    'Get atleast 8 hours of sleep 😴',
     'Practice mindfulness 🧘‍♀️',
     'Eat fruits and vegetables 🥗',
     'Take screen breaks every hour 👀',
