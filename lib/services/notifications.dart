@@ -25,7 +25,7 @@ Future<void> scheduleSleepReminder() async {
     'Time to wind down 💤',
     'Log in your time and get ready to sleep',
     _next10PM(),
-    const NotificationDetails(
+    NotificationDetails(
       android: AndroidNotificationDetails('sleep_channel', 'Sleep Reminders'),
     ),
     androidAllowWhileIdle: true,
@@ -42,3 +42,4 @@ tz.TZDateTime _next10PM() {
       ? scheduled.add(const Duration(days: 1))
       : scheduled;
 }
+

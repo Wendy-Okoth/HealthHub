@@ -9,6 +9,7 @@ import 'profile_setup_screen.dart';
 import 'step_tracker_screen.dart';
 import 'period_tracker_screen.dart';
 import 'sleep_tracker_screen.dart';
+import 'hydration_screen.dart'; // ✅ NEW IMPORT
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,7 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
       'icon': Icons.favorite,
       'screen': TrackerScreen(),
     },
-    {'title': 'Wellness Tips', 'icon': Icons.lightbulb, 'screen': TipsScreen()},
+    {
+      'title': 'Wellness Tips',
+      'icon': Icons.lightbulb,
+      'screen': TipsScreen(),
+    },
     {
       'title': 'Daily Check-in',
       'icon': Icons.check_circle,
@@ -51,6 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
       'title': 'Period Tracker',
       'icon': Icons.calendar_today,
       'screen': PeriodTrackerScreen(),
+    },
+    {
+      'title': 'Hydration Tracker', // ✅ NEW FEATURE
+      'icon': Icons.local_drink,
+      'screen': HydrationScreen(),
     },
   ];
 
