@@ -67,8 +67,6 @@ class _CalorieTrackerScreenState extends State<CalorieTrackerScreen> {
     'Fried Omena': {'cup': 180},
     'Fried Cabbage': {'cup': 60},
     'Fried Sukumawiki': {'cup': 80},
-
-
   };
 
   Future<void> _logMeal() async {
@@ -116,7 +114,7 @@ class _CalorieTrackerScreenState extends State<CalorieTrackerScreen> {
               value: _selectedMeal,
               hint: const Text('Select Meal'),
               items: calorieReference.keys.map((meal) {
-                return DropdownMenuItem(value: meal, child: Text(meal));
+                return DropdownMenuItem<String>(value: meal, child: Text(meal));
               }).toList(),
               onChanged: (val) {
                 setState(() {
@@ -130,7 +128,7 @@ class _CalorieTrackerScreenState extends State<CalorieTrackerScreen> {
                 value: _selectedUnit,
                 hint: const Text('Select Unit'),
                 items: units.map((unit) {
-                  return DropdownMenuItem(value: unit, child: Text(unit));
+                  return DropdownMenuItem<String>(value: unit, child: Text(unit));
                 }).toList(),
                 onChanged: (val) => setState(() => _selectedUnit = val),
               ),
@@ -168,4 +166,3 @@ class _CalorieTrackerScreenState extends State<CalorieTrackerScreen> {
     );
   }
 }
-
