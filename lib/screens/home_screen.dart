@@ -9,7 +9,8 @@ import 'profile_setup_screen.dart';
 import 'step_tracker_screen.dart';
 import 'period_tracker_screen.dart';
 import 'sleep_tracker_screen.dart';
-import 'hydration_screen.dart'; // ✅ NEW IMPORT
+import 'hydration_screen.dart';
+import 'calorie_tracker_screen.dart'; // ✅ NEW IMPORT
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,9 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
       'screen': PeriodTrackerScreen(),
     },
     {
-      'title': 'Hydration Tracker', // ✅ NEW FEATURE
+      'title': 'Hydration Tracker',
       'icon': Icons.local_drink,
       'screen': HydrationScreen(),
+    },
+    {
+      'title': 'Calorie Tracker', // ✅ NEW FEATURE
+      'icon': Icons.local_fire_department,
+      'screen': CalorieTrackerScreen(),
     },
   ];
 
