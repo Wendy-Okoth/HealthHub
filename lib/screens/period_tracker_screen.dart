@@ -15,6 +15,7 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
   DateTime? _lastPeriodDate;
   int _cycleLength = 28;
   Map<DateTime, String> _phaseMap = {};
+  DateTime? _predictedNextStart;
 
   final List<String> symptoms = [
     'Cramps',
@@ -33,6 +34,46 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
 
   List<String> selectedSymptoms = [];
   String? selectedMood;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPrediction(); // default: use Supabase
+  }
+
+  Future<void> _loadPrediction({
+    DateTime? overrideDate,
+    int? overrideCycle,
+  }) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return;
+
+    DateTime? baseDate;
+    int cycle = overrideCycle ?? _cycleLength;
+
+    if (overrideDate != null) {
+      baseDate = overrideDate;
+    } else {
+      final response = await supabase
+          .from('period_logs')
+          .select('start_date, cycle_length')
+          .eq('user_id', userId)
+          .order('start_date', ascending: false)
+          .limit(1)
+          .maybeSingle();
+
+      if (response != null && response['start_date'] != null) {
+        baseDate = DateTime.parse(response['start_date']);
+        cycle = response['cycle_length'] ?? cycle;
+      }
+    }
+
+    if (baseDate != null) {
+      setState(() {
+        _predictedNextStart = baseDate!.add(Duration(days: cycle));
+      });
+    }
+  }
 
   void _generatePhaseMap() {
     if (_lastPeriodDate == null) return;
@@ -84,6 +125,8 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Period log saved')));
+
+    _loadPrediction(); // refresh prediction after saving
   }
 
   @override
@@ -115,6 +158,10 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
                       _lastPeriodDate = picked;
                       _generatePhaseMap();
                     });
+                    _loadPrediction(
+                      overrideDate: picked,
+                      overrideCycle: _cycleLength,
+                    );
                   }
                 },
               ),
@@ -127,6 +174,12 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
                 onChanged: (val) {
                   _cycleLength = int.tryParse(val) ?? 28;
                   _generatePhaseMap();
+                  if (_lastPeriodDate != null) {
+                    _loadPrediction(
+                      overrideDate: _lastPeriodDate,
+                      overrideCycle: _cycleLength,
+                    );
+                  }
                 },
               ),
               const SizedBox(height: 16),
@@ -167,6 +220,12 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
                 onPressed: _savePeriodLog,
                 child: const Text('Save Period Log'),
               ),
+              const SizedBox(height: 20),
+              if (_predictedNextStart != null)
+                Text(
+                  'Next expected period: ${_predictedNextStart!.toLocal().toString().split(' ')[0]}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               const SizedBox(height: 20),
               if (_phaseMap.isNotEmpty)
                 TableCalendar(
