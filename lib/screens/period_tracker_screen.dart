@@ -16,6 +16,7 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
   int _cycleLength = 28;
   Map<DateTime, String> _phaseMap = {};
   DateTime? _predictedNextStart;
+  String? _tip;
 
   final List<String> symptoms = [
     'Cramps',
@@ -32,13 +33,30 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
     'Neutral',
   ];
 
+  final Map<String, String> wellnessTips = {
+    'Cramps':
+        'Try magnesium-rich foods like spinach or bananas, and use a warm compress.',
+    'Fatigue':
+        'Stay hydrated and prioritize sleep. Gentle movement can boost energy.',
+    'Mood Swings':
+        'Practice mindfulness or journaling. Omega-3s may help stabilize mood.',
+    'Headache': 'Limit caffeine and try peppermint oil or hydration.',
+    'Bloating':
+        'Avoid salty foods and drink herbal teas like ginger or fennel.',
+    'Sad':
+        'Connect with someone you trust. Light exercise and sunlight help lift mood.',
+    'Anxious': 'Deep breathing and grounding exercises can ease tension.',
+    'Irritable':
+        'Take short breaks and reduce overstimulation. Magnesium may help.',
+  };
+
   List<String> selectedSymptoms = [];
   String? selectedMood;
 
   @override
   void initState() {
     super.initState();
-    _loadPrediction(); // default: use Supabase
+    _loadPrediction();
   }
 
   Future<void> _loadPrediction({
@@ -122,11 +140,20 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
       'mood': selectedMood,
     });
 
+    final symptomTip = selectedSymptoms.isNotEmpty
+        ? wellnessTips[selectedSymptoms.first]
+        : null;
+    final moodTip = selectedMood != null ? wellnessTips[selectedMood!] : null;
+
+    setState(() {
+      _tip = symptomTip ?? moodTip;
+    });
+
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Period log saved')));
 
-    _loadPrediction(); // refresh prediction after saving
+    _loadPrediction();
   }
 
   @override
@@ -183,25 +210,22 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Select Symptoms:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Wrap(
-                spacing: 8,
-                children: symptoms.map((symptom) {
-                  return FilterChip(
-                    label: Text(symptom),
-                    selected: selectedSymptoms.contains(symptom),
-                    onSelected: (selected) {
-                      setState(() {
-                        selected
-                            ? selectedSymptoms.add(symptom)
-                            : selectedSymptoms.remove(symptom);
-                      });
-                    },
+              DropdownButtonFormField<String>(
+                value: selectedSymptoms.isNotEmpty
+                    ? selectedSymptoms.first
+                    : null,
+                hint: const Text('Select Symptom'),
+                items: symptoms.map((symptom) {
+                  return DropdownMenuItem<String>(
+                    value: symptom,
+                    child: Text(symptom),
                   );
                 }).toList(),
+                onChanged: (val) {
+                  setState(() {
+                    selectedSymptoms = val != null ? [val] : [];
+                  });
+                },
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
@@ -225,6 +249,14 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
                 Text(
                   'Next expected period: ${_predictedNextStart!.toLocal().toString().split(' ')[0]}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              if (_tip != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Text(
+                    'Wellness Tip: $_tip',
+                    style: const TextStyle(fontStyle: FontStyle.italic),
+                  ),
                 ),
               const SizedBox(height: 20),
               if (_phaseMap.isNotEmpty)
