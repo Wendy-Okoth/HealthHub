@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'services/notifications.dart';
+import 'services/theme_service.dart'; // ✅ ThemeService
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +17,12 @@ Future<void> main() async {
 
   await initializeNotifications();
 
-  runApp(const HealthHubApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeService(),
+      child: const HealthHubApp(),
+    ),
+  );
 }
 
 class HealthHubApp extends StatelessWidget {
@@ -24,11 +31,11 @@ class HealthHubApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final session = Supabase.instance.client.auth.currentSession;
+    final themeService = Provider.of<ThemeService>(context);
 
     return MaterialApp(
       title: 'HealthHub',
-      themeMode:
-          ThemeMode.system, // Automatically switches based on device setting
+      themeMode: themeService.themeMode, // ✅ Controlled by ThemeService
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.teal,
