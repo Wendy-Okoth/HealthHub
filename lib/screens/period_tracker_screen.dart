@@ -206,6 +206,19 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
     _loadPrediction(overrideDate: _lastPeriodDate, overrideCycle: _cycleLength);
   }
 
+  Widget _buildLegendItem(String label, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Container(width: 16, height: 16, color: color),
+          const SizedBox(width: 8),
+          Text(label),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -309,7 +322,7 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
                   ),
                 ),
               const SizedBox(height: 20),
-              if (_phaseMap.isNotEmpty)
+              if (_phaseMap.isNotEmpty) ...[
                 TableCalendar(
                   focusedDay: DateTime.now(),
                   firstDay: DateTime.now().subtract(const Duration(days: 365)),
@@ -319,20 +332,42 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
                       final phase =
                           _phaseMap[DateTime(day.year, day.month, day.day)];
                       return Container(
-                        margin: const EdgeInsets.all(4),
+                        margin: const EdgeInsets.all(2), // reduced spacing
                         decoration: BoxDecoration(
                           color: _getPhaseColor(phase),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(
+                            4,
+                          ), // tighter rounding
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           '${day.day}',
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ), // smaller text
                         ),
                       );
                     },
                   ),
+                  rowHeight: 32, // reduces calendar height
                 ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Calendar Color Key:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildLegendItem('Menstruation', Colors.redAccent),
+                    _buildLegendItem('Follicular', Colors.orangeAccent),
+                    _buildLegendItem('Ovulation', Colors.green),
+                    _buildLegendItem('Luteal', Colors.purpleAccent),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
