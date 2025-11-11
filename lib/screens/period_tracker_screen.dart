@@ -17,6 +17,7 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
   Map<DateTime, String> _phaseMap = {};
   DateTime? _predictedNextStart;
   String? _tip;
+  String? _summaryText;
 
   final List<String> symptoms = [
     'Cramps',
@@ -57,6 +58,7 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
   void initState() {
     super.initState();
     _loadPrediction();
+    _loadSummary();
   }
 
   Future<void> _loadPrediction({
@@ -86,11 +88,59 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
       }
     }
 
-    if (baseDate != null) {
-      setState(() {
-        _predictedNextStart = baseDate!.add(Duration(days: cycle));
-      });
+    setState(() {
+      _predictedNextStart = baseDate?.add(Duration(days: cycle));
+    });
+  }
+
+  Future<void> _loadSummary() async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return;
+
+    final logs = await supabase
+        .from('period_logs')
+        .select('start_date, cycle_length, symptoms, mood')
+        .eq('user_id', userId)
+        .order('start_date', ascending: true);
+
+    if (logs == null || logs.isEmpty) return;
+
+    final cycleLengths = logs.map((log) => log['cycle_length'] as int).toList();
+    final avgCycle =
+        cycleLengths.reduce((a, b) => a + b) ~/ cycleLengths.length;
+
+    final symptomCounts = <String, int>{};
+    final moodCounts = <String, int>{};
+
+    for (final log in logs) {
+      final rawSymptoms = log['symptoms'];
+      final symptoms = rawSymptoms is List
+          ? List<String>.from(rawSymptoms)
+          : rawSymptoms is String
+          ? [rawSymptoms]
+          : [];
+
+      final mood = log['mood'] ?? '';
+
+      for (final s in symptoms) {
+        symptomCounts[s] = (symptomCounts[s] ?? 0) + 1;
+      }
+      if (mood.isNotEmpty) {
+        moodCounts[mood] = (moodCounts[mood] ?? 0) + 1;
+      }
     }
+
+    final topSymptom = symptomCounts.isNotEmpty
+        ? symptomCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key
+        : 'N/A';
+    final topMood = moodCounts.isNotEmpty
+        ? moodCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key
+        : 'N/A';
+
+    setState(() {
+      _summaryText =
+          'Average cycle length: $avgCycle days\nMost common symptom: $topSymptom\nMost common mood: $topMood';
+    });
   }
 
   void _generatePhaseMap() {
@@ -153,7 +203,7 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
       context,
     ).showSnackBar(const SnackBar(content: Text('Period log saved')));
 
-    _loadPrediction();
+    _loadPrediction(overrideDate: _lastPeriodDate, overrideCycle: _cycleLength);
   }
 
   @override
