@@ -27,7 +27,10 @@ class HealthHubApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'HealthHub',
+      themeMode:
+          ThemeMode.system, // Automatically switches based on device setting
       theme: ThemeData(
+        brightness: Brightness.light,
         primarySwatch: Colors.teal,
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
@@ -41,6 +44,22 @@ class HealthHubApp extends StatelessWidget {
           ),
         ),
         iconTheme: const IconThemeData(color: Colors.green),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.teal,
+        scaffoldBackgroundColor: const Color(0xFF121212),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blueGrey,
+          foregroundColor: Colors.white,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.greenAccent,
+            foregroundColor: Colors.black,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.greenAccent),
       ),
       home: session == null ? const LoginScreen() : const HomeScreen(),
     );
