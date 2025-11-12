@@ -167,11 +167,11 @@ class _PeriodTrackerScreenState extends State<PeriodTrackerScreen> {
     switch (phase) {
       case 'Menstruation':
         return Colors.redAccent;
-      case 'Follicular':
+      case 'Follicular Phase':
         return Colors.orangeAccent;
       case 'Ovulation':
         return Colors.green;
-      case 'Luteal':
+      case 'Luteal Phase':
         return Colors.purpleAccent;
       default:
         return Colors.grey.shade300;
