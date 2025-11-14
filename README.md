@@ -35,8 +35,23 @@ git clone https://github.com/Wendy-Okoth/HealthHub.git
 cd healthhub_app
 ```
 ### 2. Install Flutter dependencies
+
+```bash
+flutter pub get
+```
+
 ### 3. Set up Supabase environment variables
+
+```bash
+Supabase.initialize(
+  url: 'your-supabase-url',
+  anonKey: 'your-anon-key',
+);
+```
 ### 4. Run the app
+```bash
+flutter run
+```
 
 ## Future Advancements
 - Push notifications for reminders and check-ins
