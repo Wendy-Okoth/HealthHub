@@ -23,8 +23,8 @@ HealthHub supports both smartphones and desktops, offering a responsive and intu
 | Frontend    | Flutter (mobile-first responsive design)                                     |
 | Backend     | Supabase (authentication, database, storage)                                 |
 | Database    | Supabase PostgreSQL                                                          |
-| APIs        | Google Maps (location), Africa’s Talking (SMS), M-Pesa (planned integration) |
-| Deployment  | Render (web), Firebase Hosting (optional), Appwrite Sites (optional)         |
+| APIs        | Google Maps (location)                                                       |
+| Deployment  |  Firebase Hosting (optional)                                                 |
 
 ## Getting Started
 
