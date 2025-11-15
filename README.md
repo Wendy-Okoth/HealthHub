@@ -1,7 +1,7 @@
 # HealthHub  
 Your Personal Wellness Companion
 
-HealthHub is a holistic health and wellness platform designed to empower individuals to track, improve, and celebrate their well-being. Inspired by the need for inclusive, accessible health tools in Kenya and beyond, HealthHub brings together essential trackers, tips, and support into one mobile-first experience.
+HealthHub is a holistic health and wellness platform designed to empower individuals to track, and improve their well-being. Inspired by the need for inclusive, accessible health tools in Kenya and beyond, HealthHub brings together essential trackers, tips, and support into one mobile-first experience.
 
 From sleep and hydration to menstrual cycles and mental check-ins, HealthHub is built for real people with real goals. Whether you're a student, professional, or caregiver, HealthHub helps you stay on top of your health journey—one tap at a time.
 
